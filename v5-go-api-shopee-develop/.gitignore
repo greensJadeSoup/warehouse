@@ -1,0 +1,5 @@
+*.txt
+*.pdf
+*.exe
+conf/base.conf
+v5-go-api-shopee

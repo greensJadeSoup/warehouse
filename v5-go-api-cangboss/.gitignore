@@ -1,0 +1,9 @@
+*.jpg
+*.png
+*.txt
+*.exe
+*.pdf
+*.xlsx
+*.jpeg
+conf/base.conf
+v5-go-api-cangboss

@@ -1,0 +1,86 @@
+一、数据库
+1、db_base
+ 负责基础部分：用户、登陆session、供应商、折扣
+2、db_platform
+ 商品、sku、店铺、订单
+3、db_warehouse
+ 仓管相关的大部分都在这个库
+ 
+ 
+二、表
+db_base.t_sso 登陆session表
+db_base.t_seller 卖家表
+db_base.t_manager 管理员表，包括超管、仓管
+db_base.t_vendor 供应商表
+db_base.t_vendor_seller 供应商和用户对应表
+db_base.t_discount 折扣表
+db_base.t_discount_seller 折扣和用户对应表
+
+
+db_platform.t_item_xx 商品表 后面的xx是根据用户id/100取余
+db_platform.t_model_xx sku表 后面的xx是根据用户id/1000取余
+db_platform.t_shop 店铺表
+
+db_warehouse.t_order_simple 订单简述表，汇总所有订单号、订单时间、预报的仓库路线等
+db_warehouse.t_pack_sub 预报子项，如果是快递类，会和t_pack中的包裹关联
+db_warehouse.t_warehouse_log 仓库日志
+db_warehouse.t_rack_log 货架日志
+db_warehouse.t_balance_log 费用日志
+db_warehouse.t_pack 包裹表，id就是t_pack_sub中的pack_id
+db_warehouse.t_connection_order 集包订单表
+db_warehouse.t_stock 库存
+db_warehouse.t_stock_rack 库存-货架关系表
+db_warehouse.t_model_stock sku-库存关系表
+db_warehouse.t_model_detail 库存商品详情表，这个表是为了冗余，避免去1000张分表里面重复找sku详情
+db_warehouse.t_mid_connection 中包表
+db_warehouse.t_connection 集包表
+db_warehouse.t_rack 货架表
+db_warehouse.t_mid_connection_normal 普货
+db_warehouse.t_gift 赠品（组合）
+db_warehouse.t_warehouse 仓库表
+db_warehouse.t_area 区域表
+db_warehouse.t_mid_connection_special 特货
+db_warehouse.t_consumable 耗材
+db_warehouse.t_notice 公告
+db_warehouse.t_sendway 发货方式
+db_warehouse.t_line 路线
+db_warehouse.t_setting_value 自定义设置，比较少用，就中包的地方有用而已
+
+
+
+
+三、程序框架
+1、component：底层组件，不涉及业务逻辑，不要修改；
+2、cangboss：大部分接口、业务逻辑都在这个服务
+3、shopee：和shopee官方接口交互的都在这个服务，比如商品订单同步、面单等等
+4、接口url规则：
+比如/api/v2/common/cangboss/order/list_order
+或者/api/v2/admin/cangboss/order/list_order
+/api/v2是固定前缀
+admin表示管理端
+common表示卖家端
+cangboss表示cangboss服务
+order表示以orderAPI.go或者orderAdminAPI.go为入口，list_order是接口名
+
+/api/v2/common/shopee/order/download_face_document
+/api/v2是固定前缀
+common表示卖家端
+shopee表示shopee服务
+order表示以orderAPI.go或者orderAdminAPI.go为入口，download_face_document是接口名
+
+5、接口的流程一般 从API/BLL/DAL/DAV 从上往下处理整个接口；
+6、CBD文件夹则用于存放自定义对象，用于接收参数和返回数据；
+
+四、接口参数
+1、api层，每个接口都有一个in的对象，用于接受参数；
+2、in的定义中，binding:"required,gte=1"中的required表示必填，否则就是不必填
+
+
+
+
+
+
+
+
+
+
